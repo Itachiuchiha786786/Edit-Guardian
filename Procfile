@@ -1,1 +1,1 @@
-worker: python3 -m sex
+worker: python3 bot.py
