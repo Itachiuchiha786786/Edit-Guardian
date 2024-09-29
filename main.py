@@ -41,11 +41,11 @@ def start(update: Update, context: CallbackContext):
     # Define buttons with URLs
     buttons = [
         [
-            InlineKeyboardButton("➕ Add Bot to Group", url="https://t.me/YOUR_BOT_USERNAME?startgroup=true"),
-            InlineKeyboardButton("ℹ️ Support Channel", url="https://t.me/YOUR_CHANNEL_LINK")
+            InlineKeyboardButton("➕ Add Bot to Group", url="https://t.me/edit_guardian_probot?startgroup=true"),
+            InlineKeyboardButton("ℹ️ Support Channel", url="https://t.me/dynamic_gangs")
         ],
         [
-            InlineKeyboardButton("💬 Support Group", url="https://t.me/YOUR_GROUP_LINK")
+            InlineKeyboardButton("💬 Support Group", url="https://t.me/dynamic_gangs")
         ]
     ]
     
