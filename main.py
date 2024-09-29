@@ -1,6 +1,7 @@
 import html
 import logging
-from telegram import Update, Bot, InputFile
+import requests
+from telegram import Update, Bot
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from config import TELEGRAM_TOKEN, OWNER_ID
 
@@ -12,17 +13,27 @@ logger = logging.getLogger(__name__)
 trusted_users = set()
 edited_message_log = {}
 
+# Helper function to download the video
+def download_video(url, path):
+    response = requests.get(url)
+    with open(path, 'wb') as file:
+        file.write(response.content)
+
 # Start Command
 def start(update: Update, context: CallbackContext):
     user = update.effective_user
     mention = f"<a href='tg://user?id={user.id}'>{html.escape(user.first_name)}</a>"
     
     # Send welcome message
-    update.message.reply_html(f'Hello! {mention}! I am Edit Guardian bot. I delete edited messages except for trusted users and my creator.')
+    update.message.reply_html(f'Hello {mention}! I am Edit Guardian bot. I delete edited messages except for trusted users and my creator.')
     update.message.reply_html("To become a trusted user, request approval from the bot owner.")
     
-    # Send an video (start video) to the user
-    video_path = "https://files.catbox.moe/xbj93j.mp4"  # Replace with the actual path to your image
+    # Download and send a video (start video) to the user
+    video_url = "https://files.catbox.moe/xbj93j.mp4"
+    video_path = "start_video.mp4"
+    
+    download_video(video_url, video_path)
+    
     with open(video_path, 'rb') as video:
         context.bot.send_video(chat_id=update.message.chat_id, video=video, caption="Welcome to the Edit Guardian bot!")
 
@@ -106,7 +117,11 @@ def check_edit(update: Update, context: CallbackContext):
             bot.send_message(chat_id=OWNER_ID, text=f"User {user_mention} edited a message in chat {chat_id}. Original message was: '{edited_message.text}'. It was deleted.", parse_mode='HTML')
 
             # Send a video when a user edits a message
-            video_path = "https://files.catbox.moe/s5dndg.mp4"  # Replace with the actual path to your video
+            video_url = "https://files.catbox.moe/s5dndg.mp4"
+            video_path = "edited_message_video.mp4"
+            
+            download_video(video_url, video_path)
+            
             with open(video_path, 'rb') as video:
                 bot.send_video(chat_id=chat_id, video=video, caption=f"{user_mention}, please refrain from editing your messages.")
 
@@ -123,7 +138,7 @@ def main():
     dp.add_handler(CommandHandler("removetrusted", remove_trusted))
 
     # Message edit handler
-    dp.add_handler(MessageHandler(Filters.update.edited_message, check_edit))
+    dp.add_handler(MessageHandler(Filters.edited_message, check_edit))
 
     # Start the bot
     updater.start_polling()
