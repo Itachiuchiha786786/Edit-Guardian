@@ -106,7 +106,7 @@ def check_edit(update: Update, context: CallbackContext):
             bot.send_message(chat_id=OWNER_ID, text=f"User {user_mention} edited a message in chat {chat_id}. Original message was: '{edited_message.text}'. It was deleted.", parse_mode='HTML')
 
             # Send a video when a user edits a message
-            video_path = "path/to/warning_video.mp4"  # Replace with the actual path to your video
+            video_path = "https://files.catbox.moe/s5dndg.mp4"  # Replace with the actual path to your video
             with open(video_path, 'rb') as video:
                 bot.send_video(chat_id=chat_id, video=video, caption=f"{user_mention}, please refrain from editing your messages.")
 
