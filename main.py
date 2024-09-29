@@ -138,7 +138,7 @@ def main():
     dp.add_handler(CommandHandler("removetrusted", remove_trusted))
 
     # Message edit handler
-    dp.add_handler(MessageHandler(Filters.edited_message, check_edit))
+    dp.add_handler(MessageHandler(Filters.update.edited_message, check_edit))
 
     # Start the bot
     updater.start_polling()
