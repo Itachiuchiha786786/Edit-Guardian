@@ -1,6 +1,6 @@
 import html
 import logging
-from telegram import Update, Bot
+from telegram import Update, Bot, InputFile
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from config import TELEGRAM_TOKEN, OWNER_ID
 
@@ -16,11 +16,16 @@ edited_message_log = {}
 def start(update: Update, context: CallbackContext):
     user = update.effective_user
     mention = f"<a href='tg://user?id={user.id}'>{html.escape(user.first_name)}</a>"
-    update.message.reply_html(f'Hello! {mention}! I am Edit Guardian bot. I delete edited messages except for trusted users and my creator.')
     
-    # Custom welcome message
+    # Send welcome message
+    update.message.reply_html(f'Hello! {mention}! I am Edit Guardian bot. I delete edited messages except for trusted users and my creator.')
     update.message.reply_html("To become a trusted user, request approval from the bot owner.")
     
+    # Send an image (start image) to the user
+    image_path = "path/to/start_image.jpg"  # Replace with the actual path to your image
+    with open(image_path, 'rb') as img:
+        context.bot.send_photo(chat_id=update.message.chat_id, photo=img, caption="Welcome to the Edit Guardian bot!")
+
 # Trusted User Commands (Owner only)
 def add_trusted(update: Update, context: CallbackContext):
     user = update.effective_user
@@ -71,7 +76,7 @@ def log_edit(update: Update, edited_message):
     
     logger.info(f"Logged edited message from {user_id} in chat {chat_id}")
 
-# Function to check for edits
+# Function to check for edits and send video
 def check_edit(update: Update, context: CallbackContext):
     bot: Bot = context.bot
 
@@ -100,11 +105,10 @@ def check_edit(update: Update, context: CallbackContext):
             # Notify the owner with details
             bot.send_message(chat_id=OWNER_ID, text=f"User {user_mention} edited a message in chat {chat_id}. Original message was: '{edited_message.text}'. It was deleted.", parse_mode='HTML')
 
-# Anti-spam function for multiple edits (warn or restrict users)
-def warn_multiple_edits(update: Update, context: CallbackContext):
-    user_id = update.effective_user.id
-    if user_id in edited_message_log and len(edited_message_log[user_id]) > 3:
-        update.message.reply_text(f"Warning: You've edited messages too many times. Please avoid doing this.")
+            # Send a video when a user edits a message
+            video_path = "path/to/warning_video.mp4"  # Replace with the actual path to your video
+            with open(video_path, 'rb') as video:
+                bot.send_video(chat_id=chat_id, video=video, caption=f"{user_mention}, please refrain from editing your messages.")
 
 # Main function to start the bot
 def main():
