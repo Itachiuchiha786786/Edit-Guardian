@@ -1,7 +1,7 @@
 import html
 import logging
 import requests
-from telegram import Update, Bot
+from telegram import Update, Bot, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from config import TELEGRAM_TOKEN, OWNER_ID
 
@@ -19,16 +19,39 @@ def download_video(url, path):
     with open(path, 'wb') as file:
         file.write(response.content)
 
-# Start Command
+# Start Command with Custom Message and Buttons
 def start(update: Update, context: CallbackContext):
     user = update.effective_user
     mention = f"<a href='tg://user?id={user.id}'>{html.escape(user.first_name)}</a>"
     
-    # Send welcome message
-    update.message.reply_html(f'Hello {mention}! I am Edit Guardian bot. I delete edited messages except for trusted users and my creator.')
-    update.message.reply_html("To become a trusted user, request approval from the bot owner.")
+    # Custom message
+    message = f"""
+❖ ᴛʜɪs ɪs •─╼⃝𖠁 𝐇ɪϻᴧηsнɪ 𖠁⃝╾─• 🎶 !
+━━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━━
+❖ ᴛʜɪs ɪs ϻᴧηᴧɢєϻєηᴛ | ϻυsɪᴄ ʙσᴛ
+❖ ησ ʟᴧɢ | ᴧᴅs ϻυsɪᴄ | ησ ᴘʀσϻσ
+❖ 24x7 ʀυη | ʙєsᴛ sσυηᴅ ǫυᴧʟɪᴛʏ
+━━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━━
+❖ ᴄʟɪᴄᴋ ση ᴛʜє ʜєʟᴩ ʙυᴛᴛση ᴛσ ɢєᴛ ɪηғσ
+    ᴧʙσυᴛ ϻʏ ϻσᴅυʟєs ᴧηᴅ ᴄσϻϻᴧηᴅs...!
+━━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━ ━━
+    """
     
-    # Download and send a video (start video) to the user
+    # Define buttons with URLs
+    buttons = [
+        [
+            InlineKeyboardButton("➕ Add Bot to Group", url="https://t.me/YOUR_BOT_USERNAME?startgroup=true"),
+            InlineKeyboardButton("ℹ️ Support Channel", url="https://t.me/YOUR_CHANNEL_LINK")
+        ],
+        [
+            InlineKeyboardButton("💬 Support Group", url="https://t.me/YOUR_GROUP_LINK")
+        ]
+    ]
+    
+    # Send custom message with buttons
+    update.message.reply_html(message, reply_markup=InlineKeyboardMarkup(buttons))
+
+    # Download and send the video
     video_url = "https://files.catbox.moe/xbj93j.mp4"
     video_path = "start_video.mp4"
     
