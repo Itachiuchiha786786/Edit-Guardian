@@ -21,10 +21,10 @@ def start(update: Update, context: CallbackContext):
     update.message.reply_html(f'Hello! {mention}! I am Edit Guardian bot. I delete edited messages except for trusted users and my creator.')
     update.message.reply_html("To become a trusted user, request approval from the bot owner.")
     
-    # Send an image (start image) to the user
-    image_path = "path/to/start_image.jpg"  # Replace with the actual path to your image
-    with open(image_path, 'rb') as img:
-        context.bot.send_photo(chat_id=update.message.chat_id, photo=img, caption="Welcome to the Edit Guardian bot!")
+    # Send an video (start video) to the user
+    video_path = "https://files.catbox.moe/xbj93j.mp4"  # Replace with the actual path to your image
+    with open(video_path, 'rb') as img:
+        context.bot.send_video(chat_id=update.message.chat_id, video=video, caption="Welcome to the Edit Guardian bot!")
 
 # Trusted User Commands (Owner only)
 def add_trusted(update: Update, context: CallbackContext):
