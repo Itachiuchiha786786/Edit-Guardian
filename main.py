@@ -23,7 +23,7 @@ def start(update: Update, context: CallbackContext):
     
     # Send an video (start video) to the user
     video_path = "https://files.catbox.moe/xbj93j.mp4"  # Replace with the actual path to your image
-    with open(video_path, 'rb') as img:
+    with open(video_path, 'rb') as video:
         context.bot.send_video(chat_id=update.message.chat_id, video=video, caption="Welcome to the Edit Guardian bot!")
 
 # Trusted User Commands (Owner only)
